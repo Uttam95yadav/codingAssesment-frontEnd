@@ -2,11 +2,12 @@ import React, {useState} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Axios from 'axios';
 import OutPut from "./OutPut";
-import {Button, Form} from 'react-bootstrap';
+import {Button, Form,Alert} from 'react-bootstrap';
 
 function LandingPage() {
   const url = "http://localhost:8080/codingasessment/frequencyandsimilarwords"
   const [showOutPut, setShowOutPut] = useState(false);
+  const [showError, setShowError] = useState(false);
   const [result, setResult] = useState({
     word: "",
     notebookText: "",
@@ -24,12 +25,25 @@ function LandingPage() {
 
   function onsubmit(e) {
     e.preventDefault();
-    Axios.post(url, data)
-    .then(res => {
-      console.log(res.data.response)
-      setResult(res.data.response)
-      setShowOutPut(true)
-    })
+    try {
+      Axios.post(url, data)
+      .then(res => {
+        console.log(res)
+        if(res.status === 200){
+          setResult(res.data.response)
+          setShowOutPut(true)
+          setShowError(false)
+        }
+        else {
+          setShowOutPut(false);
+          setShowError(true);
+        }
+      })
+    }catch (err) {
+      console.log(err);
+      setShowOutPut(false);
+      setShowError(true);
+    }
   }
 
   return (
@@ -52,6 +66,7 @@ function LandingPage() {
             Submit
           </Button>
           {showOutPut ? <OutPut result={result}></OutPut> : null}
+          {showError? <Alert>Error While Getting Result </Alert>: null}
         </Form>
       </div>
   );
