@@ -3,7 +3,7 @@ import Axios from 'axios';
 import OutPut from "./OutPut";
 
 function LandingPage() {
-  const url ="http://localhost:8080/codingasesment/notebookparser"
+  const url ="http://localhost:8080/codingasessment/frequencyandsimilarwords"
   const [invalidForm, setInvalidForm] = useState(true);
   const [showOutPut, setShowOutPut] = useState(false);
   const [result, setResult] = useState({
@@ -27,10 +27,7 @@ function LandingPage() {
   }
   function onsubmit(e) {
    e.preventDefault();
-   Axios.post(url, {
-         word: data.word,
-         notebookText: data.notebookText
-       })
+   Axios.post(url,data)
     .then(res=>{
       console.log(res.data.response)
       setResult(res.data.response)
